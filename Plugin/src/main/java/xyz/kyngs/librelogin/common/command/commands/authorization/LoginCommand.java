@@ -15,7 +15,7 @@ import xyz.kyngs.librelogin.common.AuthenticLibreLogin;
 import xyz.kyngs.librelogin.common.command.InvalidCommandArgument;
 import xyz.kyngs.librelogin.common.event.events.AuthenticWrongPasswordEvent;
 
-@CommandAlias("login|l|log")
+@CommandAlias("login|l")
 public class LoginCommand<P> extends AuthorizationCommand<P> {
 
     public LoginCommand(AuthenticLibreLogin<P, ?> premium) {
