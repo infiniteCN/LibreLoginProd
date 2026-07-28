@@ -39,6 +39,7 @@ import xyz.kyngs.librelogin.common.SLF4JLogger;
 import xyz.kyngs.librelogin.common.image.AuthenticImageProjector;
 import xyz.kyngs.librelogin.common.image.protocolize.ProtocolizeImageProjector;
 import xyz.kyngs.librelogin.common.util.CancellableTask;
+import xyz.kyngs.librelogin.velocity.ui.VelocityAuthenticationUiController;
 
 public class VelocityLibreLogin extends AuthenticLibreLogin<Player, RegisteredServer> {
 
@@ -50,6 +51,7 @@ public class VelocityLibreLogin extends AuthenticLibreLogin<Player, RegisteredSe
     @Inject private PluginDescription description;
     @Nullable private VelocityRedisBungeeIntegration redisBungee;
     @Nullable private LimboIntegration<RegisteredServer> limboIntegration;
+    @Nullable private VelocityAuthenticationUiController authenticationUi;
 
     public VelocityLibreLogin(VelocityBootstrap bootstrap) {
         this.bootstrap = bootstrap;
@@ -57,6 +59,10 @@ public class VelocityLibreLogin extends AuthenticLibreLogin<Player, RegisteredSe
 
     @Override
     protected void disable() {
+        if (authenticationUi != null) {
+            authenticationUi.disable();
+            authenticationUi = null;
+        }
         super.disable();
     }
 
@@ -192,6 +198,9 @@ public class VelocityLibreLogin extends AuthenticLibreLogin<Player, RegisteredSe
             redisBungee = new VelocityRedisBungeeIntegration();
         }
         super.enable();
+
+        authenticationUi = new VelocityAuthenticationUiController(this, bootstrap);
+        authenticationUi.enable();
         getLogger().info("LibreLogin version " + getVersion() + " enabled!");
     }
 

@@ -134,6 +134,197 @@ OVERWRITE - Overwrite the offline profile's data with the online profile's data.
                     "Whether or not to use action bar when player is awaiting authentication.",
                     ConfigurateHelper::getBoolean);
 
+    public static final ConfigurationKey<?> AUTHENTICATION_UI =
+            ConfigurationKey.getComment(
+                    "authentication-ui",
+                    """
+                    图形化登录界面。Paper 和 Velocity 都能用，1.21.6 及以上客户端会走原生对话框，
+                    更老的客户端会退回铁砧输入。Velocity 玩家站在验证服时，窗口由代理直接发过去。
+                    Floodgate 玩家沿用 LibreLogin 原本的免登录逻辑，所以不会弹基岩版表单。
+                    """);
+
+    public static final ConfigurationKey<Boolean> AUTHENTICATION_UI_ENABLED =
+            new ConfigurationKey<>(
+                    "authentication-ui.enabled",
+                    true,
+                    "要不要启用图形化登录界面。关掉后就还是原来的聊天命令。",
+                    ConfigurateHelper::getBoolean);
+
+    public static final ConfigurationKey<Boolean> AUTHENTICATION_UI_DIALOG_ENABLED =
+            new ConfigurationKey<>(
+                    "authentication-ui.dialog.enabled",
+                    true,
+                    "1.21.6 及以上客户端要不要用原生对话框。",
+                    ConfigurateHelper::getBoolean);
+
+    public static final ConfigurationKey<Boolean> AUTHENTICATION_UI_ANVIL_ENABLED =
+            new ConfigurationKey<>(
+                    "authentication-ui.anvil.enabled",
+                    true,
+                    "老客户端要不要用铁砧界面兜底。",
+                    ConfigurateHelper::getBoolean);
+
+    public static final ConfigurationKey<Boolean> AUTHENTICATION_UI_HORIZONTAL_BUTTONS =
+            new ConfigurationKey<>(
+                    "authentication-ui.dialog.horizontal-buttons",
+                    true,
+                    "原生对话框的两个按钮横着放还是竖着放。",
+                    ConfigurateHelper::getBoolean);
+
+    public static final ConfigurationKey<Boolean> AUTHENTICATION_UI_ALLOW_CLOSE =
+            new ConfigurationKey<>(
+                    "authentication-ui.allow-close",
+                    false,
+                    "允许直接关掉登录界面。关着时点退出按钮会离开服务器。",
+                    ConfigurateHelper::getBoolean);
+
+    public static final ConfigurationKey<Integer> AUTHENTICATION_UI_DELAY_TICKS =
+            new ConfigurationKey<>(
+                    "authentication-ui.open-delay-ticks",
+                    5,
+                    "玩家进服后隔几 tick 再弹界面。太小的话客户端偶尔会自己把窗口吞了。",
+                    ConfigurateHelper::getInt);
+
+    public static final ConfigurationKey<String> AUTHENTICATION_UI_LOGIN_TITLE =
+            new ConfigurationKey<>(
+                    "authentication-ui.text.login.title",
+                    "登录 infiniteMC",
+                    "登录页标题。",
+                    ConfigurateHelper::getString);
+
+    public static final ConfigurationKey<String> AUTHENTICATION_UI_LOGIN_TIP =
+            new ConfigurationKey<>(
+                    "authentication-ui.text.login.tip",
+                    "输入密码，验证通过就会进入大厅。",
+                    "登录页上面那句提示。",
+                    ConfigurateHelper::getString);
+
+    public static final ConfigurationKey<String> AUTHENTICATION_UI_PASSWORD_LABEL =
+            new ConfigurationKey<>(
+                    "authentication-ui.text.login.password-label",
+                    "密码",
+                    "密码输入框的名字。",
+                    ConfigurateHelper::getString);
+
+    public static final ConfigurationKey<String> AUTHENTICATION_UI_TOTP_LABEL =
+            new ConfigurationKey<>(
+                    "authentication-ui.text.login.totp-label",
+                    "验证码",
+                    "开了两步验证时，验证码输入框的名字。",
+                    ConfigurateHelper::getString);
+
+    public static final ConfigurationKey<String> AUTHENTICATION_UI_TOTP_TIP =
+            new ConfigurationKey<>(
+                    "authentication-ui.text.login.totp-tip",
+                    "再输入两步验证码。",
+                    "铁砧界面切到验证码那一步时显示的话。",
+                    ConfigurateHelper::getString);
+
+    public static final ConfigurationKey<String> AUTHENTICATION_UI_LOGIN_BUTTON =
+            new ConfigurationKey<>(
+                    "authentication-ui.text.login.submit-button",
+                    "登录",
+                    "登录按钮文字。",
+                    ConfigurateHelper::getString);
+
+    public static final ConfigurationKey<String> AUTHENTICATION_UI_LOGIN_FAILED =
+            new ConfigurationKey<>(
+                    "authentication-ui.text.login.failed",
+                    "没登录上，检查一下密码或验证码。",
+                    "登录没过时显示的话。",
+                    ConfigurateHelper::getString);
+
+    public static final ConfigurationKey<String> AUTHENTICATION_UI_REGISTER_TITLE =
+            new ConfigurationKey<>(
+                    "authentication-ui.text.register.title",
+                    "创建账号",
+                    "注册页标题。",
+                    ConfigurateHelper::getString);
+
+    public static final ConfigurationKey<String> AUTHENTICATION_UI_REGISTER_TIP =
+            new ConfigurationKey<>(
+                    "authentication-ui.text.register.tip",
+                    "第一次来需要设置密码，下次登录还会用到。",
+                    "注册页上面那句提示。",
+                    ConfigurateHelper::getString);
+
+    public static final ConfigurationKey<String> AUTHENTICATION_UI_CONFIRM_LABEL =
+            new ConfigurationKey<>(
+                    "authentication-ui.text.register.confirm-label",
+                    "确认密码",
+                    "确认密码输入框的名字。",
+                    ConfigurateHelper::getString);
+
+    public static final ConfigurationKey<String> AUTHENTICATION_UI_CONFIRM_TIP =
+            new ConfigurationKey<>(
+                    "authentication-ui.text.register.confirm-tip",
+                    "再输入一次刚才的密码。",
+                    "铁砧界面切到确认密码那一步时显示的话。",
+                    ConfigurateHelper::getString);
+
+    public static final ConfigurationKey<String> AUTHENTICATION_UI_REGISTER_BUTTON =
+            new ConfigurationKey<>(
+                    "authentication-ui.text.register.submit-button",
+                    "完成注册",
+                    "注册按钮文字。",
+                    ConfigurateHelper::getString);
+
+    public static final ConfigurationKey<String> AUTHENTICATION_UI_REGISTER_FAILED =
+            new ConfigurationKey<>(
+                    "authentication-ui.text.register.failed",
+                    "没注册上。检查一下两次密码是否一致，长度也别太短。",
+                    "注册没过时显示的话。",
+                    ConfigurateHelper::getString);
+
+    public static final ConfigurationKey<String> AUTHENTICATION_UI_CLOSE_BUTTON =
+            new ConfigurationKey<>(
+                    "authentication-ui.text.close-button",
+                    "关闭窗口",
+                    "允许关闭界面时的按钮文字。",
+                    ConfigurateHelper::getString);
+
+    public static final ConfigurationKey<String> AUTHENTICATION_UI_EXIT_BUTTON =
+            new ConfigurationKey<>(
+                    "authentication-ui.text.exit-button",
+                    "退出服务器",
+                    "不允许关闭界面时的按钮文字。",
+                    ConfigurateHelper::getString);
+
+    public static final ConfigurationKey<String> AUTHENTICATION_UI_EXIT_MESSAGE =
+            new ConfigurationKey<>(
+                    "authentication-ui.text.exit-message",
+                    "已取消登录。",
+                    "玩家主动退出登录时的断开提示。",
+                    ConfigurateHelper::getString);
+
+    public static final ConfigurationKey<String> AUTHENTICATION_UI_CLOSED_MESSAGE =
+            new ConfigurationKey<>(
+                    "authentication-ui.text.closed-message",
+                    "登录窗口已关闭。你也可以输入 /login 或 /register 继续。",
+                    "允许关闭时，关掉页面后发给玩家的话。",
+                    ConfigurateHelper::getString);
+
+    public static final ConfigurationKey<String> AUTHENTICATION_UI_EMPTY_INPUT =
+            new ConfigurationKey<>(
+                    "authentication-ui.text.empty-input",
+                    "先把密码输上。",
+                    "提交空密码时显示的话。",
+                    ConfigurateHelper::getString);
+
+    public static final ConfigurationKey<String> AUTHENTICATION_UI_BUSY =
+            new ConfigurationKey<>(
+                    "authentication-ui.text.busy",
+                    "上一次还没处理完，等一下再点。",
+                    "同一份登录请求还没处理完时显示的话。",
+                    ConfigurateHelper::getString);
+
+    public static final ConfigurationKey<String> AUTHENTICATION_UI_INTERNAL_ERROR =
+            new ConfigurationKey<>(
+                    "authentication-ui.text.internal-error",
+                    "登录窗口没能正常打开，重新进服试一下。",
+                    "界面内部真出错时显示的话。",
+                    ConfigurateHelper::getString);
+
     public static final ConfigurationKey<String> NEW_UUID_CREATOR =
             new ConfigurationKey<>(
                     "new-uuid-creator",

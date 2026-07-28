@@ -6,6 +6,9 @@ api-version: "1.19"
 
 dependencies:
   server:
+    packetevents:
+      load: "BEFORE"
+      required: true
     Geyser-Spigot:
       load: "BEFORE"
       required: false

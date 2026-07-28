@@ -15,7 +15,6 @@ import co.aikar.commands.CommandManager;
 import co.aikar.commands.PaperCommandManager;
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
-import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
 import java.io.File;
 import java.io.InputStream;
 import java.util.UUID;
@@ -34,26 +33,18 @@ import xyz.kyngs.librelogin.common.SLF4JLogger;
 import xyz.kyngs.librelogin.common.image.AuthenticImageProjector;
 import xyz.kyngs.librelogin.common.util.CancellableTask;
 import xyz.kyngs.librelogin.paper.protocol.PacketListener;
+import xyz.kyngs.librelogin.paper.ui.AuthenticationUiController;
 
 public class PaperLibreLogin extends AuthenticLibreLogin<Player, World> {
 
     private final PaperBootstrap bootstrap;
+    private AuthenticationUiController authenticationUi;
     private PaperListeners listeners;
     private boolean started;
 
     public PaperLibreLogin(PaperBootstrap bootstrap) {
         this.bootstrap = bootstrap;
         this.started = false;
-
-        PacketEvents.setAPI(SpigotPacketEventsBuilder.build(bootstrap));
-
-        PacketEvents.getAPI()
-                .getSettings()
-                //                .debug(true)
-                .checkForUpdates(false)
-                .bStats(false);
-
-        PacketEvents.getAPI().load();
     }
 
     public PaperBootstrap getBootstrap() {
@@ -119,7 +110,10 @@ public class PaperLibreLogin extends AuthenticLibreLogin<Player, World> {
 
     @Override
     protected void disable() {
-        PacketEvents.getAPI().terminate();
+        if (authenticationUi != null) {
+            authenticationUi.disable();
+            authenticationUi = null;
+        }
         if (getDatabaseProvider() == null) return; // Not initialized
 
         super.disable();
@@ -180,6 +174,9 @@ public class PaperLibreLogin extends AuthenticLibreLogin<Player, World> {
         Bukkit.getPluginManager().registerEvents(listeners, bootstrap);
         Bukkit.getPluginManager().registerEvents(new Blockers(this), bootstrap);
         PacketEvents.getAPI().getEventManager().registerListener(new PacketListener(listeners));
+
+        authenticationUi = new AuthenticationUiController(this);
+        authenticationUi.enable();
 
         started = true;
     }

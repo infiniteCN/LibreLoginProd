@@ -55,8 +55,6 @@ tasks.withType<ShadowJar> {
     relocate("org.spongepowered.configurate", "xyz.kyngs.librelogin.lib.configurate")
     relocate("net.byteflux.libby", "xyz.kyngs.librelogin.lib.libby")
     relocate("org.postgresql", "xyz.kyngs.librelogin.lib.postgresql")
-    relocate("com.github.retrooper.packetevents", "xyz.kyngs.librelogin.lib.packetevents.api")
-    relocate("io.github.retrooper.packetevents", "xyz.kyngs.librelogin.lib.packetevents.platform")
 }
 
 java {
@@ -66,7 +64,13 @@ java {
 }
 
 tasks.withType<Jar> {
-    from("../LICENSE.txt")
+    from("../LICENSE") {
+        into("META-INF")
+        rename { "LIBRELOGIN_LICENSE" }
+    }
+    from("../licenses/FLEXLOGINUI_LICENSE") {
+        into("META-INF")
+    }
 }
 
 libby {
@@ -101,6 +105,7 @@ dependencies {
     compileOnly("com.velocitypowered:velocity-api:3.4.0-SNAPSHOT")
     compileOnly("com.velocitypowered:velocity-proxy:3.2.0-SNAPSHOT-277")
     compileOnly("com.github.ProxioDev.ValioBungee:RedisBungee-Bungee:0.13.0")
+    compileOnly("com.github.retrooper:packetevents-velocity:2.13.0")
 
     //MySQL
     libby("org.mariadb.jdbc:mariadb-java-client:3.5.4")
@@ -138,13 +143,25 @@ dependencies {
 
     //Paper
     compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
-    implementation("com.github.retrooper:packetevents-spigot:2.13.0")
+    compileOnly("com.github.retrooper:packetevents-spigot:2.13.0")
     compileOnly("org.apache.logging.log4j:log4j-core:2.25.1")
 
     //Libby
     implementation("xyz.kyngs.libby:libby-bukkit:1.6.0")
     implementation("xyz.kyngs.libby:libby-velocity:1.6.0")
     implementation("xyz.kyngs.libby:libby-paper:1.6.0")
+
+    // UI 选择逻辑很小，但版本分支一多就容易抽风，留几条测试盯着。
+    testImplementation(platform("org.junit:junit-bom:5.13.4"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    // 正服会由 Paper 或 Velocity 提供 Guava，单测自己跑时可没人替它带。
+    testRuntimeOnly("com.google.guava:guava:33.5.0-jre")
+    testRuntimeOnly("org.spongepowered:configurate-hocon:4.2.0")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
 
 tasks.withType<ProcessResources> {

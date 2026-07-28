@@ -34,6 +34,7 @@ import xyz.kyngs.librelogin.api.provider.LibreLoginProvider;
         // TODO: Update authors
         authors = {"vuxeim", "sapphirecode"},
         dependencies = {
+            @Dependency(id = "packetevents"),
             @Dependency(id = "floodgate", optional = true),
             @Dependency(id = "luckperms", optional = true),
             @Dependency(id = "protocolize", optional = true),
