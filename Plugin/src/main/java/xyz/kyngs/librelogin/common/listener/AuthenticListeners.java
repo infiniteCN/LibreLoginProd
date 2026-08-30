@@ -117,6 +117,23 @@ public class AuthenticListeners<Plugin extends AuthenticLibreLogin<P, S>, P, S> 
                     null);
         }
 
+        /*
+         * 已登记离线账号的身份已经由数据库确定，不需要每次登录都重新等待外部接口。
+         * 这也避免 Mojang 与备用接口同时变慢时，离线玩家在预登录阶段等到客户端超时。
+         * 正版账号和新名字仍会查询正版资料，不能借接口故障冒用正版身份。
+         */
+        User knownUser;
+        try {
+            knownUser = checkAndValidateByName(username, null, false, address);
+        } catch (InvalidCommandArgument e) {
+            return new PreLoginResult(PreLoginState.DENIED, e.getUserFuckUp(), null);
+        }
+
+        if (knownUser != null
+                && PreLoginIdentity.isKnownOfflineAccount(knownUser.getPremiumUUID())) {
+            return new PreLoginResult(PreLoginState.FORCE_OFFLINE, null, knownUser);
+        }
+
         PremiumUser mojangData;
 
         try {

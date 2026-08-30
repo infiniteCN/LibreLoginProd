@@ -27,6 +27,12 @@ import xyz.kyngs.librelogin.common.util.GeneralUtil;
 
 public class AuthenticPremiumProvider implements PremiumProvider {
 
+    /*
+     * 预登录阶段不能把多个备用接口各等五秒，否则三次串行超时会超过客户端的登录等待时间。
+     * 正常链路通常在两秒内完成；接口变慢时尽快切换备用源。
+     */
+    static final int REQUEST_TIMEOUT_MILLIS = 2500;
+
     private final Cache<String, PremiumUser> userCache;
     private final List<ThrowableFunction<String, PremiumUser, PremiumException>> fetchers;
     private final AuthenticLibreLogin<?, ?> plugin;
@@ -123,8 +129,8 @@ public class AuthenticPremiumProvider implements PremiumProvider {
                     (HttpURLConnection)
                             new URL("https://api.ashcon.app/mojang/v2/user/" + name)
                                     .openConnection();
-            connection.setConnectTimeout(5000);
-            connection.setReadTimeout(5000);
+            connection.setConnectTimeout(REQUEST_TIMEOUT_MILLIS);
+            connection.setReadTimeout(REQUEST_TIMEOUT_MILLIS);
 
             switch (connection.getResponseCode()) {
                 case 200 -> {
@@ -165,8 +171,8 @@ public class AuthenticPremiumProvider implements PremiumProvider {
                     (HttpURLConnection)
                             new URL("https://playerdb.co/api/player/minecraft/" + name)
                                     .openConnection();
-            connection.setConnectTimeout(5000);
-            connection.setReadTimeout(5000);
+            connection.setConnectTimeout(REQUEST_TIMEOUT_MILLIS);
+            connection.setReadTimeout(REQUEST_TIMEOUT_MILLIS);
 
             switch (connection.getResponseCode()) {
                 case 200 -> {
@@ -216,8 +222,8 @@ public class AuthenticPremiumProvider implements PremiumProvider {
             var connection =
                     (HttpURLConnection)
                             new URL("https://api.minetools.eu/uuid/" + name).openConnection();
-            connection.setConnectTimeout(5000);
-            connection.setReadTimeout(5000);
+            connection.setConnectTimeout(REQUEST_TIMEOUT_MILLIS);
+            connection.setReadTimeout(REQUEST_TIMEOUT_MILLIS);
 
             switch (connection.getResponseCode()) {
                 case 200 -> {
@@ -275,8 +281,8 @@ public class AuthenticPremiumProvider implements PremiumProvider {
                                             "https://api.minecraftservices.com/minecraft/profile/lookup/name/"
                                                     + name)
                                     .openConnection();
-            connection.setConnectTimeout(5000);
-            connection.setReadTimeout(5000);
+            connection.setConnectTimeout(REQUEST_TIMEOUT_MILLIS);
+            connection.setReadTimeout(REQUEST_TIMEOUT_MILLIS);
 
             return switch (connection.getResponseCode()) {
                 case 429 ->
@@ -337,6 +343,8 @@ public class AuthenticPremiumProvider implements PremiumProvider {
                                             "https://sessionserver.mojang.com/session/minecraft/profile/"
                                                     + uuid.toString())
                                     .openConnection();
+            connection.setConnectTimeout(REQUEST_TIMEOUT_MILLIS);
+            connection.setReadTimeout(REQUEST_TIMEOUT_MILLIS);
 
             return switch (connection.getResponseCode()) {
                 case 429 ->
